@@ -1,0 +1,1153 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EFEMÉRIDES | MPBA</title>
+  <!-- Favicon obligatorio MPBA (emoji de balanza de la justicia) -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚖️</text></svg>">
+  
+  <style>
+    /* ==========================================================================
+       MPBA Guía de Estilo Web - Herramientas Internas
+       Variables Oficiales
+       ========================================================================== */
+    :root {
+      --color-primary: #193B57;
+      --color-text: #243645;
+      --color-text-secondary: #647687;
+      --color-bg: #F5F7F9;
+      --color-border: #DCE4EB;
+      --color-link: #155C8C;
+      --color-success: #1C8053;
+      --color-error: #A03434;
+      --color-warning: #D97706;
+      --color-surface: #FFFFFF;
+
+      --font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      --max-width: 1120px;
+      
+      --radius-panel: 12px;
+      --radius-card: 10px;
+      --radius-btn: 8px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: var(--font-family);
+      background-color: var(--color-bg);
+      color: var(--color-text);
+      font-size: 14px;
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    /* Accessibility focus */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+      outline: 2px solid var(--color-link);
+      outline-offset: 2px;
+    }
+
+    /* Header Institucional */
+    header {
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+      padding: 12px 20px;
+    }
+    .header-container {
+      max-width: var(--max-width);
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .brand-title {
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .brand-sub {
+      font-size: 12px;
+      opacity: 0.85;
+      border-left: 1px solid rgba(255,255,255,0.3);
+      padding-left: 12px;
+    }
+    .tz-badge {
+      font-size: 11px;
+      background: rgba(255,255,255,0.15);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    /* Layout Principal */
+    main {
+      max-width: var(--max-width);
+      width: 100%;
+      margin: 20px auto;
+      padding: 0 16px;
+      flex: 1;
+    }
+
+    /* Navegación por Pestañas */
+    nav.main-nav {
+      display: flex;
+      gap: 8px;
+      border-bottom: 2px solid var(--color-border);
+      margin-bottom: 20px;
+    }
+    .nav-btn {
+      background: none;
+      border: none;
+      padding: 10px 16px;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--color-text-secondary);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .nav-btn:hover {
+      color: var(--color-primary);
+    }
+    .nav-btn.active {
+      color: var(--color-primary);
+      border-bottom-color: var(--color-primary);
+    }
+
+    /* Paneles y Tarjetas */
+    .panel {
+      background-color: var(--color-surface);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-panel);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .panel-title {
+      font-size: 18px;
+      color: var(--color-primary);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Grids y Dashboard */
+    .grid-dashboard {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 20px;
+    }
+    .hero-card {
+      background: linear-gradient(135deg, var(--color-primary) 0%, #254d6e 100%);
+      color: white;
+      border-radius: var(--radius-panel);
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hero-countdown {
+      font-size: 36px;
+      font-weight: 800;
+      margin: 10px 0;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.2);
+      padding: 2px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      width: fit-content;
+    }
+
+    /* Listas y Efemérides */
+    .efem-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .efem-card {
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-card);
+      padding: 14px;
+      background: var(--color-surface);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .efem-card:hover {
+      border-color: #CAD5DE;
+    }
+    .efem-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .efem-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-text);
+    }
+    .efem-meta {
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    /* Badges y Etiquetas */
+    .badge {
+      font-size: 11px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+    }
+    .badge-hoy { background: #FEF3C7; color: #92400E; }
+    .badge-cercano { background: #E0F2FE; color: #075985; }
+    .badge-normal { background: #F3F4F6; color: #374151; }
+    
+    .badge-cat { background: #E2E8F0; color: #334155; }
+    .badge-estado { background: #E0E7FF; color: #3730A3; }
+
+    /* Formulario */
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 16px;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .form-group.full-width {
+      grid-column: 1 / -1;
+    }
+    label {
+      font-weight: 600;
+      font-size: 13px;
+      color: var(--color-text);
+    }
+    input, select, textarea {
+      padding: 10px;
+      border: 1px solid #CAD5DE;
+      border-radius: var(--radius-btn);
+      font-family: inherit;
+      font-size: 14px;
+      color: var(--color-text);
+      background-color: #FFFFFF;
+    }
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--color-link);
+    }
+
+    /* Botones */
+    .btn {
+      padding: 10px 18px;
+      border-radius: var(--radius-btn);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .btn-primary {
+      background-color: var(--color-primary);
+      color: #FFFFFF;
+    }
+    .btn-primary:hover { opacity: 0.95; }
+    .btn-secondary {
+      background-color: #FFFFFF;
+      border-color: #CAD5DE;
+      color: var(--color-primary);
+    }
+    .btn-secondary:hover { background-color: var(--color-bg); }
+    .btn-danger {
+      background-color: var(--color-error);
+      color: white;
+    }
+
+    /* Calendario Interactivo */
+    .calendar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+    .calendar-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+    .cal-day-head {
+      text-align: center;
+      font-weight: 700;
+      padding: 8px;
+      color: var(--color-text-secondary);
+      font-size: 12px;
+    }
+    .cal-day {
+      min-height: 90px;
+      border: 1px solid var(--color-border);
+      border-radius: 6px;
+      padding: 6px;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .cal-day.empty { background: var(--color-bg); border-color: transparent; }
+    .cal-day.today { border: 2px solid var(--color-primary); background: #F0F7FF; }
+    .cal-day-num { font-size: 12px; font-weight: 700; color: var(--color-text-secondary); }
+    .cal-event {
+      font-size: 11px;
+      padding: 2px 4px;
+      background: #E0F2FE;
+      color: #0369A1;
+      border-radius: 3px;
+      cursor: pointer;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Filtros Bar */
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 16px;
+      align-items: center;
+      background: white;
+      padding: 12px;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-panel);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 16px;
+    }
+    .modal-content {
+      background: white;
+      border-radius: var(--radius-panel);
+      width: 100%;
+      max-width: 650px;
+      max-height: 90vh;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    /* Banner API Configuration */
+    .api-banner {
+      background-color: #FEF3C7;
+      border: 1px solid #F59E0B;
+      color: #92400E;
+      padding: 12px 16px;
+      border-radius: var(--radius-btn);
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--color-border);
+      padding: 16px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-text-secondary);
+      margin-top: auto;
+      background: white;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .calendar-grid { font-size: 10px; }
+      .cal-day { min-height: 60px; padding: 2px; }
+      .cal-event { font-size: 9px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Encabezado Institucional -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <span style="font-size: 24px;">⚖️</span>
+        <div>
+          <div class="brand-title">EFEMÉRIDES | MPBA</div>
+          <div class="brand-sub">Comunicación Digital y Redes Sociales</div>
+        </div>
+      </div>
+      <div class="tz-badge">Zona Horaria: Argentina (GMT-3)</div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Banner de Configuración Backend Apps Script -->
+    <div id="api-config-banner" class="api-banner" style="display: none;">
+      <div>
+        <strong>Configuración Requerida:</strong> Ingrese la URL de Web App ejecutada desde Google Apps Script.
+      </div>
+      <button class="btn btn-secondary" onclick="prompApiUrl()">Configurar URL</button>
+    </div>
+
+    <!-- Navegación Principal -->
+    <nav class="main-nav" role="tablist">
+      <button class="nav-btn active" onclick="switchTab('dashboard')" id="tab-dashboard">Dashboard</button>
+      <button class="nav-btn" onclick="switchTab('calendario')" id="tab-calendario">Calendario Mensual</button>
+      <button class="nav-btn" onclick="switchTab('agenda')" id="tab-agenda">Agenda y Filtros</button>
+      <button class="nav-btn" onclick="openFormModal()" id="tab-nuevo">+ Nueva Efeméride</button>
+    </nav>
+
+    <!-- VISTA 1: DASHBOARD -->
+    <section id="view-dashboard" class="tab-view">
+      <div class="grid-dashboard">
+        <!-- Próxima Efeméride Destacada -->
+        <div class="hero-card" id="hero-card">
+          <div>
+            <span class="hero-tag">Próxima Efeméride Destacada</span>
+            <div id="hero-title" style="font-size: 20px; font-weight: 700; margin-top: 8px;">Cargando...</div>
+            <div id="hero-date" style="font-size: 13px; opacity: 0.9;">-</div>
+          </div>
+          <div>
+            <div id="hero-countdown" class="hero-countdown">-- días</div>
+            <div id="hero-action"></div>
+          </div>
+        </div>
+
+        <!-- Resumen de Efemérides -->
+        <div class="panel">
+          <div class="panel-title">Resumen de Efemérides</div>
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; text-align: center;">
+            <div style="background: var(--color-bg); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700; color: var(--color-primary);" id="cnt-7d">0</div>
+              <div style="font-size: 12px; color: var(--color-text-secondary);">Próximos 7 días</div>
+            </div>
+            <div style="background: var(--color-bg); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700; color: var(--color-primary);" id="cnt-30d">0</div>
+              <div style="font-size: 12px; color: var(--color-text-secondary);">Próximos 30 días</div>
+            </div>
+            <div style="background: var(--color-bg); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700; color: var(--color-warning);" id="cnt-pend">0</div>
+              <div style="font-size: 12px; color: var(--color-text-secondary);">Pendientes Planificación</div>
+            </div>
+            <div style="background: var(--color-bg); padding: 12px; border-radius: 8px;">
+              <div style="font-size: 24px; font-weight: 700; color: var(--color-success);" id="cnt-prog">0</div>
+              <div style="font-size: 12px; color: var(--color-text-secondary);">Programadas / Listas</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Próximas Fechas Relevantes -->
+      <div class="panel" style="margin-top: 20px;">
+        <div class="panel-title">Próximas Efemérides (Orden por cercanía)</div>
+        <div id="dashboard-list" class="efem-list">
+          <div style="color: var(--color-text-secondary); text-align: center; padding: 20px;">Cargando datos...</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 2: CALENDARIO INTERACTIVO -->
+    <section id="view-calendario" class="tab-view" style="display: none;">
+      <div class="panel">
+        <div class="calendar-header">
+          <button class="btn btn-secondary" onclick="changeMonth(-1)">&larr; Mes Anterior</button>
+          <h2 id="calendar-month-year" style="font-size: 18px; color: var(--color-primary);"></h2>
+          <button class="btn btn-secondary" onclick="changeMonth(1)">Mes Siguiente &rarr;</button>
+        </div>
+        <div class="calendar-grid">
+          <div class="cal-day-head">DOM</div>
+          <div class="cal-day-head">LUN</div>
+          <div class="cal-day-head">MAR</div>
+          <div class="cal-day-head">MIÉ</div>
+          <div class="cal-day-head">JUE</div>
+          <div class="cal-day-head">VIE</div>
+          <div class="cal-day-head">SÁB</div>
+        </div>
+        <div class="calendar-grid" id="calendar-days-grid">
+          <!-- Renderizado dinámico de días -->
+        </div>
+      </div>
+    </section>
+
+    <!-- VISTA 3: AGENDA / LISTA COMPLETA Y FILTROS -->
+    <section id="view-agenda" class="tab-view" style="display: none;">
+      <div class="filter-bar">
+        <input type="text" id="filter-search" placeholder="Buscar por título o descripción..." style="flex: 1; min-width: 200px;" oninput="applyFilters()">
+        
+        <select id="filter-categoria" onchange="applyFilters()">
+          <option value="">Todas las Categorías</option>
+          <option value="institucional">Institucional MPBA</option>
+          <option value="justicia">Justicia y Derechos</option>
+          <option value="nacional">Nacional</option>
+          <option value="internacional">Internacional</option>
+          <option value="otra">Otra</option>
+        </select>
+
+        <select id="filter-estado" onchange="applyFilters()">
+          <option value="">Todos los Estados</option>
+          <option value="sin_evaluar">Sin Evaluar</option>
+          <option value="seleccionada">Seleccionada</option>
+          <option value="en_produccion">En Producción</option>
+          <option value="programada">Programada</option>
+          <option value="publicada">Publicada</option>
+          <option value="descartada">Descartada</option>
+        </select>
+
+        <select id="filter-prioridad" onchange="applyFilters()">
+          <option value="">Todas las Prioridades</option>
+          <option value="alta">Alta</option>
+          <option value="media">Media</option>
+          <option value="baja">Baja</option>
+        </select>
+
+        <button class="btn btn-secondary" onclick="exportCSV()">Exportar CSV</button>
+        <button class="btn btn-secondary" onclick="exportICS()">Exportar ICS</button>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title">
+          <span>Efemérides Registradas</span>
+          <span style="font-size: 12px; font-weight: normal; color: var(--color-text-secondary);" id="agenda-count">0 registros</span>
+        </div>
+        <div id="agenda-list" class="efem-list">
+          <!-- Renderizado dinámico -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- MODAL: FORMULARIO DE CARGA / EDICIÓN -->
+  <div id="modal-form" class="modal-overlay" style="display: none;">
+    <div class="modal-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <h3 id="modal-form-title" style="color: var(--color-primary);">Nueva Efeméride</h3>
+        <button class="btn btn-secondary" onclick="closeFormModal()">Esc / Cerrar</button>
+      </div>
+
+      <form id="efemeride-form" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="form-id">
+
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="form-titulo">Título de la Efeméride *</label>
+            <input type="text" id="form-titulo" required placeholder="Ej: Día del Empleado Judicial">
+          </div>
+
+          <div class="form-group">
+            <label for="form-fecha">Fecha *</label>
+            <input type="date" id="form-fecha" required onchange="check29Feb(this.value)">
+          </div>
+
+          <div class="form-group" style="justify-content: flex-end;">
+            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+              <input type="checkbox" id="form-esAnual" checked style="width: auto;"> Repetición Anual
+            </label>
+          </div>
+
+          <div class="form-group" id="group-bisiesto" style="display: none;">
+            <label for="form-reglaBisiesto">Regla para Año No Bisiesto (29 Feb)</label>
+            <select id="form-reglaBisiesto">
+              <option value="28_feb">Celebrar el 28 de Febrero</option>
+              <option value="1_mar">Celebrar el 1 de Marzo</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-categoria">Categoría *</label>
+            <select id="form-categoria" required>
+              <option value="institucional">Institucional MPBA</option>
+              <option value="justicia">Justicia y Derechos</option>
+              <option value="nacional">Nacional</option>
+              <option value="internacional">Internacional</option>
+              <option value="otra">Otra</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-prioridad">Prioridad</label>
+            <select id="form-prioridad">
+              <option value="alta">Alta</option>
+              <option value="media" selected>Media</option>
+              <option value="baja">Baja</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-relevancia">Relevancia Editorial</label>
+            <select id="form-relevancia">
+              <option value="alta">Alta</option>
+              <option value="media" selected>Media</option>
+              <option value="baja">Baja</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-estado">Estado Editorial</label>
+            <select id="form-estado">
+              <option value="sin_evaluar">Sin evaluar</option>
+              <option value="seleccionada">Seleccionada</option>
+              <option value="en_produccion">En producción</option>
+              <option value="programada">Programada</option>
+              <option value="publicada">Publicada</option>
+              <option value="descartada">Descartada</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-formato">Formato Sugerido</label>
+            <select id="form-formato">
+              <option value="ninguno">Ninguno / Solo referencia</option>
+              <option value="post">Post estático</option>
+              <option value="carrusel">Carrusel</option>
+              <option value="video">Reel / Video</option>
+              <option value="historia">Historia</option>
+              <option value="nota">Nota institucional web</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="form-responsable">Responsable de Producción</label>
+            <input type="text" id="form-responsable" placeholder="Ej: Redacción / Nombre">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="form-descripcion">Descripción / Contexto Histórico</label>
+            <textarea id="form-descripcion" rows="3" placeholder="Reseña o datos clave de la fecha..."></textarea>
+          </div>
+
+          <div class="form-group full-width">
+            <label for="form-enlaces">Enlaces de Referencia (Separados por coma)</label>
+            <input type="text" id="form-enlaces" placeholder="https://...">
+          </div>
+
+          <div class="form-group full-width">
+            <label for="form-observaciones">Observaciones Internas</label>
+            <textarea id="form-observaciones" rows="2" placeholder="Notas sobre piezas gráficas, indicaciones previas..."></textarea>
+          </div>
+        </div>
+
+        <div style="display: flex; justify-content: space-between; margin-top: 20px; border-top: 1px solid var(--color-border); padding-top: 16px;">
+          <button type="button" class="btn btn-danger" id="btn-delete" style="display: none;" onclick="confirmDelete()">Eliminar</button>
+          <div style="display: flex; gap: 8px; margin-left: auto;">
+            <button type="button" class="btn btn-secondary" onclick="closeFormModal()">Cancelar</button>
+            <button type="submit" class="btn btn-primary" id="btn-save">Guardar Efeméride</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    Ministerio Público de la Provincia de Buenos Aires &bull; Comunicación Digital y Redes Sociales &bull; v1.0
+  </footer>
+
+  <!-- LÓGICA DE LA APLICACIÓN -->
+  <script>
+    // Configuración Inicial
+    let API_URL = localStorage.getItem('MPBA_API_URL') || '';
+    let efemeridesData = [];
+    let currentCalendarDate = new Date();
+
+    document.addEventListener('DOMContentLoaded', () => {
+      if (!API_URL) {
+        document.getElementById('api-config-banner').style.display = 'flex';
+      }
+      loadData();
+
+      // Cerrar modal con tecla Escape
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeFormModal();
+      });
+    });
+
+    function prompApiUrl() {
+      const url = prompt("Ingrese la URL del Web App de Google Apps Script:", API_URL);
+      if (url) {
+        API_URL = url.trim();
+        localStorage.setItem('MPBA_API_URL', API_URL);
+        document.getElementById('api-config-banner').style.display = 'none';
+        loadData();
+      }
+    }
+
+    // NAVEGACIÓN ENTRE SECCIONES
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.tab-view').forEach(view => view.style.display = 'none');
+
+      document.getElementById(`tab-${tab}`).classList.add('active');
+      document.getElementById(`view-${tab}`).style.display = 'block';
+
+      if (tab === 'calendario') renderCalendar();
+      if (tab === 'agenda') applyFilters();
+    }
+
+    // CARGA DE DATOS DESDE GOOGLE APPS SCRIPT
+    async function loadData() {
+      if (!API_URL) return;
+
+      try {
+        const res = await fetch(`${API_URL}?action=read`);
+        const data = await res.json();
+        
+        if (Array.isArray(data)) {
+          efemeridesData = data;
+        } else if (data.items) {
+          efemeridesData = data.items;
+        }
+        
+        renderDashboard();
+      } catch (err) {
+        console.error("Error al cargar datos:", err);
+      }
+    }
+
+    /* ==========================================================================
+       CÁLCULO DE FECHAS Y CUENTA REGRESIVA (Zona Horaria Argentina)
+       ========================================================================== */
+    function getTodayArg() {
+      // Obtener la fecha actual en la zona horaria 'America/Argentina/Buenos_Aires'
+      const now = new Date();
+      const argStr = now.toLocaleString("en-US", { timeZone: "America/Argentina/Buenos_Aires" });
+      const argDate = new Date(argStr);
+      return new Date(argDate.getFullYear(), argDate.getMonth(), argDate.getDate());
+    }
+
+    function calculateNextOccurrence(efem) {
+      const today = getTodayArg();
+      const [yearStr, monthStr, dayStr] = efem.fecha.split('-');
+      const origMonth = parseInt(monthStr, 10) - 1;
+      let origDay = parseInt(dayStr, 10);
+
+      const targetYear = today.getFullYear();
+      
+      // Control de año bisiesto para 29 de Febrero
+      let isLeapYear = (year) => (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0);
+      
+      let calcMonth = origMonth;
+      let calcDay = origDay;
+
+      if (origMonth === 1 && origDay === 29) {
+        if (!isLeapYear(targetYear)) {
+          if (efem.reglaBisiesto === '1_mar') {
+            calcMonth = 2; // Marzo
+            calcDay = 1;
+          } else {
+            calcMonth = 1; // Febrero
+            calcDay = 28;
+          }
+        }
+      }
+
+      let targetDate = new Date(targetYear, calcMonth, calcDay);
+
+      if (efem.esAnual === 'SI' || efem.esAnual === true) {
+        if (targetDate < today) {
+          // Si ya pasó este año, calcular para el año siguiente
+          const nextYear = targetYear + 1;
+          calcMonth = origMonth;
+          calcDay = origDay;
+
+          if (origMonth === 1 && origDay === 29 && !isLeapYear(nextYear)) {
+            if (efem.reglaBisiesto === '1_mar') {
+              calcMonth = 2; calcDay = 1;
+            } else {
+              calcMonth = 1; calcDay = 28;
+            }
+          }
+          targetDate = new Date(nextYear, calcMonth, calcDay);
+        }
+      }
+
+      const diffTime = targetDate - today;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+      return {
+        targetDate,
+        diffDays,
+        isPast: targetDate < today && !(efem.esAnual === 'SI' || efem.esAnual === true)
+      };
+    }
+
+    function getCountdownBadge(diffDays, isPast) {
+      if (isPast) return `<span class="badge badge-normal">Finalizado</span>`;
+      if (diffDays === 0) return `<span class="badge badge-hoy">Hoy</span>`;
+      if (diffDays === 1) return `<span class="badge badge-hoy">Mañana</span>`;
+      if (diffDays <= 7) return `<span class="badge badge-cercano">En ${diffDays} días</span>`;
+      return `<span class="badge badge-normal">En ${diffDays} días</span>`;
+    }
+
+    /* ==========================================================================
+       RENDERIZADO: DASHBOARD
+       ========================================================================== */
+    function renderDashboard() {
+      const dashboardList = document.getElementById('dashboard-list');
+      dashboardList.innerHTML = '';
+
+      if (efemeridesData.length === 0) {
+        dashboardList.innerHTML = '<div style="color: var(--color-text-secondary); text-align: center; padding: 20px;">No hay efemérides registradas.</div>';
+        return;
+      }
+
+      // Procesar y ordenar por días restantes
+      const itemsProcesados = efemeridesData.map(item => {
+        const calc = calculateNextOccurrence(item);
+        return { ...item, calc };
+      }).filter(item => !item.calc.isPast)
+        .sort((a, b) => a.calc.diffDays - b.calc.diffDays);
+
+      // Métricas Dashboard
+      const count7d = itemsProcesados.filter(i => i.calc.diffDays <= 7).length;
+      const count30d = itemsProcesados.filter(i => i.calc.diffDays <= 30).length;
+      const countPend = efemeridesData.filter(i => i.estado === 'sin_evaluar' || i.estado === 'seleccionada').length;
+      const countProg = efemeridesData.filter(i => i.estado === 'programada' || i.estado === 'publicada').length;
+
+      document.getElementById('cnt-7d').innerText = count7d;
+      document.getElementById('cnt-30d').innerText = count30d;
+      document.getElementById('cnt-pend').innerText = countPend;
+      document.getElementById('cnt-prog').innerText = countProg;
+
+      // Card Principal (Efeméride más cercana)
+      if (itemsProcesados.length > 0) {
+        const top = itemsProcesados[0];
+        document.getElementById('hero-title').innerText = top.titulo;
+        document.getElementById('hero-date').innerText = `${top.calc.targetDate.toLocaleDateString('es-AR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}`;
+        document.getElementById('hero-countdown').innerText = top.calc.diffDays === 0 ? '¡HOY!' : `Faltan ${top.calc.diffDays} días`;
+        document.getElementById('hero-action').innerHTML = `<button class="btn btn-secondary" onclick="openFormModal('${top.id}')">Editar / Planificar</button>`;
+      }
+
+      // Renderizar Lista de Próximas
+      itemsProcesados.slice(0, 8).forEach(item => {
+        dashboardList.appendChild(createEfemerideCard(item));
+      });
+    }
+
+    function createEfemerideCard(item) {
+      const card = document.createElement('div');
+      card.className = 'efem-card';
+      
+      const badgeCountdown = getCountdownBadge(item.calc.diffDays, item.calc.isPast);
+
+      card.innerHTML = `
+        <div class="efem-info">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            ${badgeCountdown}
+            <span class="efem-title">${item.titulo}</span>
+          </div>
+          <div class="efem-meta">
+            <span>📅 ${item.calc.targetDate.toLocaleDateString('es-AR')}</span>
+            <span class="badge badge-cat">${item.categoria}</span>
+            <span class="badge badge-estado">Estado: ${item.estado.replace('_', ' ')}</span>
+            ${item.responsable ? `<span>👤 ${item.responsable}</span>` : ''}
+          </div>
+        </div>
+        <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="openFormModal('${item.id}')">Editar</button>
+      `;
+      return card;
+    }
+
+    /* ==========================================================================
+       RENDERIZADO: CALENDARIO MENSUAL
+       ========================================================================== */
+    function renderCalendar() {
+      const grid = document.getElementById('calendar-days-grid');
+      grid.innerHTML = '';
+
+      const year = currentCalendarDate.getFullYear();
+      const month = currentCalendarDate.getMonth();
+
+      const monthNames = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
+      document.getElementById('calendar-month-year').innerText = `${monthNames[month]} ${year}`;
+
+      const firstDayIndex = new Date(year, month, 1).getDay();
+      const lastDate = new Date(year, month + 1, 0).getDate();
+
+      // Días vacíos previos
+      for (let i = 0; i < firstDayIndex; i++) {
+        const emptyCell = document.createElement('div');
+        emptyCell.className = 'cal-day empty';
+        grid.appendChild(emptyCell);
+      }
+
+      const todayArg = getTodayArg();
+
+      // Días del mes
+      for (let day = 1; day <= lastDate; day++) {
+        const cell = document.createElement('div');
+        cell.className = 'cal-day';
+
+        if (todayArg.getFullYear() === year && todayArg.getMonth() === month && todayArg.getDate() === day) {
+          cell.classList.add('today');
+        }
+
+        const dayNum = document.createElement('div');
+        dayNum.className = 'cal-day-num';
+        dayNum.innerText = day;
+        cell.appendChild(dayNum);
+
+        // Buscar efemérides para este día concreto
+        efemeridesData.forEach(item => {
+          const calc = calculateNextOccurrence(item);
+          if (calc.targetDate.getFullYear() === year && calc.targetDate.getMonth() === month && calc.targetDate.getDate() === day) {
+            const ev = document.createElement('div');
+            ev.className = 'cal-event';
+            ev.innerText = item.titulo;
+            ev.title = item.titulo;
+            ev.onclick = () => openFormModal(item.id);
+            cell.appendChild(ev);
+          }
+        });
+
+        grid.appendChild(cell);
+      }
+    }
+
+    function changeMonth(delta) {
+      currentCalendarDate.setMonth(currentCalendarDate.getMonth() + delta);
+      renderCalendar();
+    }
+
+    /* ==========================================================================
+       RENDERIZADO: AGENDA Y FILTROS
+       ========================================================================== */
+    function applyFilters() {
+      const search = document.getElementById('filter-search').value.toLowerCase();
+      const cat = document.getElementById('filter-categoria').value;
+      const estado = document.getElementById('filter-estado').value;
+      const prioridad = document.getElementById('filter-prioridad').value;
+
+      const filtered = efemeridesData.map(item => ({ ...item, calc: calculateNextOccurrence(item) }))
+        .filter(item => {
+          const matchesSearch = item.titulo.toLowerCase().includes(search) || item.descripcion.toLowerCase().includes(search);
+          const matchesCat = !cat || item.categoria === cat;
+          const matchesEstado = !estado || item.estado === estado;
+          const matchesPrioridad = !prioridad || item.prioridad === prioridad;
+
+          return matchesSearch && matchesCat && matchesEstado && matchesPrioridad;
+        })
+        .sort((a, b) => a.calc.diffDays - b.calc.diffDays);
+
+      const agendaList = document.getElementById('agenda-list');
+      agendaList.innerHTML = '';
+      document.getElementById('agenda-count').innerText = `${filtered.length} registros encontrados`;
+
+      if (filtered.length === 0) {
+        agendaList.innerHTML = '<div style="color: var(--color-text-secondary); text-align: center; padding: 20px;">No se encontraron efemérides con los filtros seleccionados.</div>';
+        return;
+      }
+
+      filtered.forEach(item => {
+        agendaList.appendChild(createEfemerideCard(item));
+      });
+    }
+
+    /* ==========================================================================
+       FORMULARIO Y OPERACIONES CRUD
+       ========================================================================== */
+    function openFormModal(id = null) {
+      const modal = document.getElementById('modal-form');
+      const form = document.getElementById('efemeride-form');
+      form.reset();
+
+      if (id) {
+        const item = efemeridesData.find(i => String(i.id) === String(id));
+        if (item) {
+          document.getElementById('modal-form-title').innerText = 'Editar Efeméride';
+          document.getElementById('form-id').value = item.id;
+          document.getElementById('form-titulo').value = item.titulo;
+          document.getElementById('form-fecha').value = item.fecha;
+          document.getElementById('form-esAnual').checked = item.esAnual === 'SI' || item.esAnual === true;
+          document.getElementById('form-categoria').value = item.categoria;
+          document.getElementById('form-prioridad').value = item.prioridad;
+          document.getElementById('form-relevancia').value = item.relevancia;
+          document.getElementById('form-estado').value = item.estado;
+          document.getElementById('form-formato').value = item.formato;
+          document.getElementById('form-responsable').value = item.responsable;
+          document.getElementById('form-descripcion').value = item.descripcion;
+          document.getElementById('form-enlaces').value = item.enlaces;
+          document.getElementById('form-observaciones').value = item.observaciones;
+          document.getElementById('form-reglaBisiesto').value = item.reglaBisiesto || '28_feb';
+
+          check29Feb(item.fecha);
+          document.getElementById('btn-delete').style.display = 'block';
+        }
+      } else {
+        document.getElementById('modal-form-title').innerText = 'Nueva Efeméride';
+        document.getElementById('form-id').value = '';
+        document.getElementById('btn-delete').style.display = 'none';
+        document.getElementById('group-bisiesto').style.display = 'none';
+      }
+
+      modal.style.display = 'flex';
+    }
+
+    function closeFormModal() {
+      document.getElementById('modal-form').style.display = 'none';
+    }
+
+    function check29Feb(fechaVal) {
+      if (!fechaVal) return;
+      const parts = fechaVal.split('-');
+      if (parts[1] === '02' && parts[2] === '29') {
+        document.getElementById('group-bisiesto').style.display = 'flex';
+      } else {
+        document.getElementById('group-bisiesto').style.display = 'none';
+      }
+    }
+
+    async function handleFormSubmit(e) {
+      e.preventDefault();
+      if (!API_URL) {
+        alert("Primero debe configurar la URL de Apps Script.");
+        return;
+      }
+
+      const id = document.getElementById('form-id').value;
+      const data = {
+        id: id || null,
+        titulo: document.getElementById('form-titulo').value,
+        fecha: document.getElementById('form-fecha').value,
+        esAnual: document.getElementById('form-esAnual').checked,
+        categoria: document.getElementById('form-categoria').value,
+        prioridad: document.getElementById('form-prioridad').value,
+        relevancia: document.getElementById('form-relevancia').value,
+        estado: document.getElementById('form-estado').value,
+        formato: document.getElementById('form-formato').value,
+        responsable: document.getElementById('form-responsable').value,
+        descripcion: document.getElementById('form-descripcion').value,
+        enlaces: document.getElementById('form-enlaces').value,
+        observaciones: document.getElementById('form-observaciones').value,
+        reglaBisiesto: document.getElementById('form-reglaBisiesto').value
+      };
+
+      const action = id ? 'update' : 'create';
+      const saveBtn = document.getElementById('btn-save');
+      saveBtn.disabled = true;
+      saveBtn.innerText = 'Guardando...';
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action, data })
+        });
+        const res = await response.json();
+
+        if (res.success) {
+          closeFormModal();
+          await loadData();
+        } else {
+          alert("Error al guardar: " + res.error);
+        }
+      } catch (err) {
+        alert("Error de conexión al guardar cambios.");
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerText = 'Guardar Efeméride';
+      }
+    }
+
+    async function confirmDelete() {
+      const id = document.getElementById('form-id').value;
+      if (!id) return;
+
+      if (confirm("¿Está seguro de que desea eliminar esta efeméride? Esta acción no se puede deshacer.")) {
+        try {
+          const response = await fetch(API_URL, {
+            method: 'POST',
+            body: JSON.stringify({ action: 'delete', data: { id } })
+          });
+          const res = await response.json();
+
+          if (res.success) {
+            closeFormModal();
+            await loadData();
+          } else {
+            alert("Error al eliminar: " + res.error);
+          }
+        } catch (err) {
+          alert("Error de conexión al eliminar.");
+        }
+      }
+    }
+
+    /* ==========================================================================
+       EXPORTACIONES (CSV e ICS)
+       ========================================================================== */
+    function exportCSV() {
+      if (efemeridesData.length === 0) return alert("No hay datos para exportar.");
+
+      let csv = "ID;Título;Fecha;Anual;Categoría;Estado;Prioridad;Responsable;Descripción\n";
+      efemeridesData.forEach(i => {
+        csv += `"${i.id}";"${i.titulo}";"${i.fecha}";"${i.esAnual}";"${i.categoria}";"${i.estado}";"${i.prioridad}";"${i.responsable}";"${i.descripcion}"\n`;
+      });
+
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `efemerides_mpba_${new Date().toISOString().slice(0,10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
+    function exportICS() {
+      if (efemeridesData.length === 0) return alert("No hay datos para exportar.");
+
+      let ics = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//MPBA//EFEMERIDES//ES\n";
+      
+      efemeridesData.forEach(i => {
+        const calc = calculateNextOccurrence(i);
+        const dateStr = calc.targetDate.toISOString().replace(/-|:|\.\d\d\d/g, "").slice(0, 8);
+
+        ics += "BEGIN:VEVENT\n";
+        ics += `SUMMARY:${i.titulo}\n`;
+        ics += `DTSTART;VALUE=DATE:${dateStr}\n`;
+        ics += `DESCRIPTION:${i.descripcion || ''} (Estado: ${i.estado})\n`;
+        if (i.esAnual === 'SI' || i.esAnual === true) {
+          ics += "RRULE:FREQ=YEARLY\n";
+        }
+        ics += "END:VEVENT\n";
+      });
+
+      ics += "END:VCALENDAR";
+
+      const blob = new Blob([ics], { type: 'text/calendar;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.setAttribute("download", `efemerides_mpba_${new Date().toISOString().slice(0,10)}.ics`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+  </script>
+</body>
+</html>
